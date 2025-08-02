@@ -75,6 +75,55 @@ function loadComponent(id, url, callback) {
     });
 }
 
+// Count-up Animation for Stats
+function animateCounter(element, target, duration = 2000) {
+  const start = 0;
+  const increment = target / (duration / 16); // 60fps
+  let current = start;
+  
+  const timer = setInterval(() => {
+    current += increment;
+    if (current >= target) {
+      current = target;
+      clearInterval(timer);
+    }
+    element.textContent = Math.floor(current) + '+';
+  }, 16);
+}
+
+// Intersection Observer for Stats Animation
+function initStatsAnimation() {
+  const statsSection = document.querySelector('.mobile-hero-stats');
+  if (!statsSection) return;
+  
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const statCards = entry.target.querySelectorAll('.mobile-stat-card');
+        
+        statCards.forEach((card, index) => {
+          const statValue = card.querySelector('.stat-value');
+          const targetCount = parseInt(statValue.getAttribute('data-count'));
+          
+          // Add staggered animation delay
+          setTimeout(() => {
+            card.classList.add('animate');
+            animateCounter(statValue, targetCount, 1500 + (index * 200));
+          }, index * 150);
+        });
+        
+        // Unobserve after animation starts
+        observer.unobserve(entry.target);
+      }
+    });
+  }, {
+    threshold: 0.5,
+    rootMargin: '0px 0px -50px 0px'
+  });
+  
+  observer.observe(statsSection);
+}
+
 window.addEventListener('DOMContentLoaded', function() {
   // Existing content animation fix
   document.querySelectorAll('.company-intro, .ceo-section, .we-deal-in').forEach(function(el) {
@@ -89,6 +138,9 @@ window.addEventListener('DOMContentLoaded', function() {
     void el.offsetWidth;
     el.style.animation = '';
   });
+  
+  // Initialize stats animation
+  initStatsAnimation();
 });
 
 document.addEventListener('DOMContentLoaded', function () {
