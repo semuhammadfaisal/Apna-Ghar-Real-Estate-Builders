@@ -131,16 +131,11 @@ window.addEventListener('DOMContentLoaded', function() {
     void el.offsetWidth;
     el.style.animation = '';
   });
-
-  // Floating button animation fix
-  document.querySelectorAll('.floating-btn').forEach(function(el) {
-    el.style.animation = 'none';
-    void el.offsetWidth;
-    el.style.animation = '';
-  });
   
   // Initialize stats animation
   initStatsAnimation();
+  
+
 });
 
 document.addEventListener('DOMContentLoaded', function () {
@@ -403,3 +398,4 @@ window.addEventListener('load', function() {
     initTestimonialsCarousel();
   }
 });
+
